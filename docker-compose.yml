@@ -1,0 +1,11 @@
+services:
+  newssort:
+    build:
+      context: .
+      args:
+        WITH_BERT: "1"      # set to "0" to skip PyTorch / transformers
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend/models:/models:ro
+    restart: unless-stopped

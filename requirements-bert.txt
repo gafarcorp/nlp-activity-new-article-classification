@@ -1,0 +1,4 @@
+# Only needed to serve the BERT model. For a CPU-only machine, install torch from
+# https://pytorch.org first (pick the CPU build), then: pip install -r requirements-bert.txt
+torch
+transformers>=4.41

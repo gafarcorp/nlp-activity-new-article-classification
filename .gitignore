@@ -1,0 +1,10 @@
+# trained models are large: keep them out of git (or use Git LFS)
+backend/models/*
+!backend/models/.gitkeep
+!backend/models/README.txt
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+venv/
+.env

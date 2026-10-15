@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>NewsSort: news topic tagging</title>
+  <meta name="description" content="Suggests a topic (World, Sports, Business, Sci/Tech) for a news article and shows when models disagree.">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="topbar">
+    <div class="brand">
+      <span class="logo" aria-hidden="true">N</span>
+      <div><strong>NewsSort</strong><small>Topic tagging for newsrooms</small></div>
+    </div>
+    <nav id="nav" aria-label="Main">
+      <a href="#classify" data-page="classify">Classify</a>
+      <a href="#batch" data-page="batch">Batch</a>
+      <a href="#performance" data-page="performance">Model performance</a>
+      <a href="#history" data-page="history">History</a>
+      <a href="#about" data-page="about">About</a>
+    </nav>
+    <div class="topbar-right">
+      <span id="status-chip" class="chip" role="status">Checking models...</span>
+      <button id="theme-toggle" class="icon-btn" type="button" aria-label="Switch between light and dark mode">Theme</button>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- ============================ CLASSIFY ============================ -->
+    <section id="page-classify" class="page" aria-labelledby="h-classify">
+      <h1 id="h-classify">Classify an article</h1>
+      <p class="lead">Paste a headline and a short description. NewsSort suggests a topic and how sure it is. You make the final call.</p>
+
+      <div class="card">
+        <label for="title">Title</label>
+        <input id="title" type="text" autocomplete="off" placeholder="e.g. Central bank lifts interest rates again">
+
+        <label for="description">Description</label>
+        <textarea id="description" rows="5" placeholder="One or two sentences about the story"></textarea>
+        <div class="row between">
+          <small id="counter" class="muted" aria-live="polite">0 / 2000 characters</small>
+          <small id="example-note" class="muted"></small>
+        </div>
+
+        <div class="row wrap gap">
+          <div class="field">
+            <label for="model">Model</label>
+            <select id="model">
+              <option value="bert">BERT</option>
+              <option value="logreg">Logistic Regression</option>
+              <option value="rf">Random Forest</option>
+              <option value="all">Compare all</option>
+            </select>
+          </div>
+          <div class="actions">
+            <button id="btn-classify" class="btn primary" type="button">Classify</button>
+            <button id="btn-example" class="btn" type="button">Try an example</button>
+            <button id="btn-clear" class="btn ghost" type="button">Clear</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="error" class="alert error" role="alert" hidden></div>
+      <div id="results" aria-live="polite"></div>
+      <p class="muted small">Confidence is how sure the model is, not proof that it is right.</p>
+    </section>
+
+    <!-- ============================== BATCH ============================== -->
+    <section id="page-batch" class="page" aria-labelledby="h-batch" hidden>
+      <h1 id="h-batch">Batch classify</h1>
+      <p class="lead">Upload a CSV with a <code>title</code> and/or <code>description</code> column. Up to <span id="batch-limit">1000</span> rows, 5 MB.</p>
+
+      <div class="card">
+        <label id="drop" class="drop" for="file">
+          <strong>Drop a CSV here or click to choose</strong>
+          <span id="file-name" class="muted">No file selected</span>
+        </label>
+        <input id="file" type="file" accept=".csv,text/csv" hidden>
+        <div class="row wrap gap">
+          <div class="field">
+            <label for="batch-model">Model</label>
+            <select id="batch-model">
+              <option value="bert">BERT</option>
+              <option value="logreg">Logistic Regression</option>
+              <option value="rf">Random Forest</option>
+            </select>
+          </div>
+          <div class="actions"><button id="btn-batch" class="btn primary" type="button" disabled>Run</button></div>
+        </div>
+        <div id="progress" class="progress" hidden><span></span></div>
+        <small class="muted">BERT on a CPU can take a while for large files.</small>
+      </div>
+
+      <div id="batch-error" class="alert error" role="alert" hidden></div>
+      <div id="batch-out" hidden>
+        <div class="row wrap gap between">
+          <p id="batch-summary" class="muted"></p>
+          <div class="row wrap gap">
+            <select id="batch-filter" aria-label="Filter by topic">
+              <option value="">All topics</option>
+              <option>World</option><option>Sports</option><option>Business</option><option>Sci/Tech</option>
+            </select>
+            <label class="check"><input id="batch-low" type="checkbox"> Needs review only</label>
+            <button id="btn-download" class="btn" type="button">Download CSV</button>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table id="batch-table">
+            <thead><tr>
+              <th data-key="row" tabindex="0">#</th>
+              <th data-key="title" tabindex="0">Article</th>
+              <th data-key="topic" tabindex="0">Topic</th>
+              <th data-key="confidence" tabindex="0">Confidence</th>
+              <th data-key="review" tabindex="0">Review</th>
+            </tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================== PERFORMANCE ========================== -->
+    <section id="page-performance" class="page" aria-labelledby="h-perf" hidden>
+      <h1 id="h-perf">Model performance</h1>
+      <p id="perf-dataset" class="lead">Loading...</p>
+      <div id="perf-error" class="alert error" role="alert" hidden></div>
+
+      <div class="card">
+        <h2>Test results</h2>
+        <div class="table-wrap"><table id="perf-table">
+          <thead><tr><th>Model</th><th>Accuracy</th><th>Macro-F1</th><th>Errors (of 7,600)</th><th>Training time</th><th>Scoring time (test set)</th></tr></thead>
+          <tbody></tbody>
+        </table></div>
+      </div>
+
+      <div class="card">
+        <h2>Accuracy and macro-F1</h2>
+        <div id="chart"></div>
+        <p class="muted small">The vertical axis starts at 86%, so gaps look larger than they are.</p>
+      </div>
+
+      <div class="card">
+        <div class="row between wrap gap">
+          <h2>Confusion matrix</h2>
+          <div class="field"><label for="cm-model">Model</label>
+            <select id="cm-model"><option value="bert">BERT</option><option value="logreg">Logistic Regression</option><option value="rf">Random Forest</option></select>
+          </div>
+        </div>
+        <div id="heatmap" class="table-wrap"></div>
+        <p class="muted small">Rows are the true topic, columns the predicted topic. Outlined cells: Business and Sci/Tech confusions, the hardest pair for every model.</p>
+      </div>
+      <p id="perf-note" class="muted small"></p>
+    </section>
+
+    <!-- ============================= HISTORY ============================= -->
+    <section id="page-history" class="page" aria-labelledby="h-history" hidden>
+      <h1 id="h-history">History</h1>
+      <p class="lead">Your last 50 predictions, stored only in this browser. Mark a wrong topic to record a correction.</p>
+      <div class="row wrap gap">
+        <button id="btn-export" class="btn" type="button">Export corrections (CSV)</button>
+        <button id="btn-clear-history" class="btn ghost" type="button">Clear history</button>
+      </div>
+      <div id="history-empty" class="muted">No predictions yet.</div>
+      <div class="table-wrap">
+        <table id="history-table" hidden>
+          <thead><tr><th>When</th><th>Article</th><th>Model</th><th>Predicted</th><th>Confidence</th><th>Correction</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ============================== ABOUT ============================== -->
+    <section id="page-about" class="page" aria-labelledby="h-about" hidden>
+      <h1 id="h-about">About NewsSort</h1>
+      <div class="card">
+        <h2>How it works</h2>
+        <ol class="steps">
+          <li><strong>Clean.</strong> The title and description are joined and cleaned the same way the models were trained (HTML leftovers removed; heavier cleaning for the TF-IDF models, light cleaning for BERT).</li>
+          <li><strong>Predict.</strong> Logistic Regression and Random Forest read TF-IDF features. BERT reads word pieces with context. Each model returns a probability for World, Sports, Business and Sci/Tech.</li>
+          <li><strong>Flag.</strong> The top topic and confidence are shown. If the top two topics are close, if Business and Sci/Tech compete, or if the models disagree, the article is flagged for a human to check.</li>
+        </ol>
+      </div>
+      <div class="card">
+        <h2>Limits</h2>
+        <ul>
+          <li>Only four broad topics. Works best on English headlines with a short description.</li>
+          <li>On the AG News test set, BERT misclassified 428 of 7,600 articles (about 1 in 18). Some labels in that data are ambiguous.</li>
+          <li>It assists a human editor; it does not replace one.</li>
+        </ul>
+      </div>
+      <p class="muted">Built by team Neural Nexus for the NLP course (Activity 2), JAIN (Deemed-to-be University).</p>
+    </section>
+  </main>
+
+  <footer><small>NewsSort. Results shown on the Model performance page come from one train/test split and one random seed.</small></footer>
+  <script src="app.js" defer></script>
+</body>
+</html>

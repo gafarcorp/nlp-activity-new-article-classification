@@ -1,0 +1,27 @@
+[
+  {
+    "title": "Central bank lifts interest rates again",
+    "description": "Policymakers raised the benchmark rate by half a percentage point, saying inflation remains too high and warning of slower growth.",
+    "note": ""
+  },
+  {
+    "title": "Home side wins title in overtime thriller",
+    "description": "A late comeback sent the final into extra time, where the home team scored the winning goal in front of a sold-out crowd.",
+    "note": ""
+  },
+  {
+    "title": "Diplomats meet to discuss ceasefire",
+    "description": "Delegates from several countries held talks on a possible ceasefire and the delivery of humanitarian aid to affected regions.",
+    "note": ""
+  },
+  {
+    "title": "Researchers unveil new quantum computing chip",
+    "description": "The prototype processor could speed up simulations used in drug discovery, the research team said on Tuesday.",
+    "note": ""
+  },
+  {
+    "title": "Chipmaker posts record profit as demand for AI hardware grows",
+    "description": "Shares of the semiconductor company rose after it reported record revenue and raised its forecast for the next quarter.",
+    "note": "Overlap example: this could reasonably be filed under Business or Sci/Tech."
+  }
+]

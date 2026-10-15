@@ -1,0 +1,155 @@
+{
+  "dataset": "AG News test set: 7,600 articles (1,900 per class)",
+  "note": "Results from the team's own run of the training notebook. Single train/test split and one random seed; hardware differed (BERT on GPU, the other two on CPU), so times are indicative only.",
+  "labels": [
+    "World",
+    "Sports",
+    "Business",
+    "Sci/Tech"
+  ],
+  "chart_axis_min": 86,
+  "models": {
+    "bert": {
+      "name": "BERT",
+      "accuracy": 94.37,
+      "precision_macro": 94.39,
+      "recall_macro": 94.37,
+      "f1_macro": 94.37,
+      "train_seconds": 1097.3,
+      "test_seconds": 11.91,
+      "errors": 428,
+      "accuracy_ci95": [
+        93.79,
+        94.86
+      ],
+      "per_class_f1": {
+        "World": 0.9566,
+        "Sports": 0.9874,
+        "Business": 0.9122,
+        "Sci/Tech": 0.9188
+      },
+      "confusion": [
+        [
+          1806,
+          10,
+          42,
+          42
+        ],
+        [
+          13,
+          1875,
+          7,
+          5
+        ],
+        [
+          37,
+          6,
+          1719,
+          138
+        ],
+        [
+          20,
+          7,
+          101,
+          1772
+        ]
+      ]
+    },
+    "logreg": {
+      "name": "Logistic Regression",
+      "accuracy": 91.63,
+      "precision_macro": 91.62,
+      "recall_macro": 91.63,
+      "f1_macro": 91.62,
+      "train_seconds": 13.2,
+      "test_seconds": 0.01,
+      "errors": 636,
+      "accuracy_ci95": [
+        91.01,
+        92.2
+      ],
+      "per_class_f1": {
+        "World": 0.9196,
+        "Sports": 0.9685,
+        "Business": 0.8834,
+        "Sci/Tech": 0.8931
+      },
+      "confusion": [
+        [
+          1722,
+          56,
+          73,
+          49
+        ],
+        [
+          14,
+          1863,
+          14,
+          9
+        ],
+        [
+          59,
+          13,
+          1678,
+          150
+        ],
+        [
+          50,
+          15,
+          134,
+          1701
+        ]
+      ]
+    },
+    "rf": {
+      "name": "Random Forest",
+      "accuracy": 89.59,
+      "precision_macro": 89.55,
+      "recall_macro": 89.59,
+      "f1_macro": 89.55,
+      "train_seconds": 440.0,
+      "test_seconds": 0.74,
+      "errors": 791,
+      "accuracy_ci95": [
+        88.89,
+        90.28
+      ],
+      "per_class_f1": {
+        "World": 0.9044,
+        "Sports": 0.9492,
+        "Business": 0.8637,
+        "Sci/Tech": 0.8647
+      },
+      "confusion": [
+        [
+          1698,
+          76,
+          69,
+          57
+        ],
+        [
+          21,
+          1849,
+          16,
+          14
+        ],
+        [
+          65,
+          32,
+          1626,
+          177
+        ],
+        [
+          71,
+          39,
+          154,
+          1636
+        ]
+      ]
+    }
+  },
+  "shared_errors": {
+    "all_three_wrong": 262,
+    "share_of_test_set_pct": 3.4
+  }
+}
